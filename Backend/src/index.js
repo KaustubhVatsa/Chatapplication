@@ -14,10 +14,19 @@ const __dirname = path.resolve();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
-app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
-}));
+app.use(
+    cors({
+      origin: (origin, callback) => {
+        const allowedOrigins = ["http://localhost:5002", "http://localhost:5173"];
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true,
+    })
+  );
 //calling route
 app.use("/api/auth",authroutes)
 app.use("/api/message",messageRoutes)
