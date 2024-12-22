@@ -94,7 +94,7 @@ export const updateProfile = async(req, res)=>{
             {profilePic:uploadResponse.secure_url},
             {new:true}
         );
-        res.send(200).json(updatedUser);
+        res.status(200).json(updatedUser);
     } catch (error) {
         console.log("Error in updated Profile controller ", error.message);
         res.status(500).json({message:"Internal Server Error"})

@@ -1,6 +1,7 @@
 import User from "../models/user.models.js"
 import Message from "../models/message.models.js"
 import cloudinary from "../libs/cloudinary.js";
+import { getReceiverSocketId, io } from "../libs/socket.js";
 
 export const contactListforSidebar = async(req, res)=>{
     //get in all the contact for the current user
@@ -57,6 +58,10 @@ export const sendMessage = async(req, res)=>{
             text,
             image:imageUrl,
         })
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage",newMessage);
+        }
         await newMessage.save();
 
         // socket io functionality goes here
